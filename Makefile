@@ -1,9 +1,9 @@
-AS=/usr/local/bin/gpasm
-CC=/usr/local/bin/sdcc
-CFLAGS= --debug -mpic16 -p18f2520 --use-non-free
+AS=/usr/bin/env /gpasm
+CC=/usr/bin/env sdcc
+CFLAGS= --debug -mpic14 -p16f1829 --use-non-free
 PIC=pk2cmd
-MODEL=PIC18F2520
-PICFLAGS=-B/usr/local/share/pk2 -P$(MODEL) -M
+MODEL=PIC16F1829
+PICFLAGS=-P$(MODEL) -M
 
 HEX_FILES=servopack.hex
 
