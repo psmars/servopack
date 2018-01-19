@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+man $1 | sed 's,\",\\",g;s,^,std::cerr << ",g;s,$," << std::endl;,g' 
