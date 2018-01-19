@@ -1,0 +1,69 @@
+.\"************************************************************
+.TH QUANTISE 1 2016-10-21 Points&Forces "Points&Forces User Commands" 
+
+.\"************************************************************
+.SH NAME
+quantise \- transforms and scales a uniformly sampled signal into a non-uniform series of pulses.
+
+.\"************************************************************
+.SH SYNOPSIS
+.B quantise
+[\-dt INT|\-\-dt INT] [\-s INT|\-\-scale INT] [\-m INT|\-\-max INT] [\-i|\-\-invert] [\-b INT|\-\-bias INT] [\-2d|\-\-2d|\-2D|\-\-2D] [\-?|\-h|\-\-help]
+
+.\"************************************************************
+.SH DESCRIPTION
+.PP 
+.B quantise
+reads a waveform from the standard input and returns a quantised version to the standard output. Each line of the input consists of (1) 'x' value, and optionally (2) 'y' value. The records are assumed to be uniformly spaced. No assumption is made about meaning and units (interval between samples and scale of data). Options \-\-dt and \-\-scale are meant to produce a meaningful output. Each line of the output consists of an interval of (let us say) time, and codes indicating (1) whether a pulse needs to be triggered in the direction of 'x', (2) its sign, (3) whether a pulse needs to be triggered in the 'y' direction, (4) its sign. By default, only 'x' is used. Option \-\-2D produces data for 'x' and 'y'.
+
+.PD
+.\"************************************************************
+.SH OPTIONS
+
+.TP
+.BI \-dt " INTEGER" "\fR,\fP \-\-dt " INTEGER
+scaling factor for (let us say) time. The value to give depends of the sampling rate of the input, the desired output unit and of the possible time scaling. If time is scaled 1/10 (if 'x' and 'y' representdisplacements \-to be scaled 1/100\- and the original accelerations have to be conserved), the input sampling rate is 200Hz and the desired output unit is 'us', \-\-dt should be 500 = 1.e6/(200*10).
+
+.TP
+.BI \-m " INTEGER" "\fR,\fP \-\-max " INTEGER
+maximum value for time intervals. If the value will need to fit in a 8bits integer, this value is 255 (default). When longer intervals are necessary, series of 'null' pulses are produced: 'max 0 0 0 0'.
+
+.TP
+.BI \-s " INTEGER" "\fR,\fP \-\-scale " INTEGER
+scaling factor for 'x' and 'y', displacements for instance. The value to give depends of the unit of the input and the dimension scaling. If the model to test has a scale of 1/100, the input dimension unit is 'm' and the desired displacement steps are 'um', \-\-scale should be 10 000 = 1.e6/100.
+
+.TP
+.BI \-b " INTEGER" "\fR,\fP \-\-bias " INTEGER
+bias in time values (default: 0). Time (in same unit as output) to subtract to each produced intervalsi to account for pulse length, transmission delay...
+
+.TP
+.BR \-2d "," \-\-2D
+reads and output data for 'x' and 'y' displacements. The defaults is only to read data in one dimension.
+
+.TP
+.BR \-i "," \-\-invert
+inverts the meaning of 'x' and 'y'.
+
+.TP
+.BR \-h "," \-\-help "," \-?
+Returns the manual page
+
+.\"************************************************************
+.SH AUTHORS
+Written by Pierre Smars (first version: 2016)
+
+.\"************************************************************
+.SH BUGS
+.PP
+Reports of bugs or problems should be submitted via electronic mail to <smars@yuntech.edu.tw>.
+
+.\"************************************************************
+.SH COPYRIGHT
+Copyright (C) 2016 Pierre Smars.   License  GPLv2
+<http://www.gnu.org/licenses/gpl-2.0.html>.
+This  is  free  software:  you  are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+.\"************************************************************
+.SH "SEE ALSO"
+quantise_pic.awk
