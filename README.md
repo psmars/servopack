@@ -1,2 +1,3 @@
-# servopack
+# Servopack
+Yaskawa SGD-02BP
 
