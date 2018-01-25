@@ -216,6 +216,18 @@ function data = wave
 	yr = yreference;
 	ss = r_getn(":CHAN1:SCAL?");
 	md = r_getdepth;
+	if (size(md)(1)==0)
+	  #auto mode
+		ncopen = r_getn(":CHAN1:DISP?")+r_getn(":CHAN2:DISP?")+r_getn(":CHAN3:DISP?")+r_getn(":CHAN4:DISP?");
+		if (ncopen==1)
+      vxi11_write(com,":ACQ:MDEP 12000");
+		elseif (ncopen==2)
+      vxi11_write(com,":ACQ:MDEP 6000");
+		else
+      vxi11_write(com,":ACQ:MDEP 3000");
+		endif;
+	  md = r_getdepth;
+  endif;
 	nd = md/1200;
 	vv = [];
 	for i = 0:nd-1
@@ -223,7 +235,7 @@ function data = wave
 		r_to((i+1)*1200);
 		vxi11_write(com,':WAV:DATA?');
 		d0 = vxi11_read(com, 20000);
-		nj = size(d0)r=(2);
+		n = size(d0)(2);
 		d0 = d0(12:n-1);
 		d1 = (double(d0)-y0-yr)*dy;
 		d1 = d1';
