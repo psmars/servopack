@@ -141,7 +141,7 @@ function id = yreference
 	id = r_getn(":WAV:YREF?");
 endfunction
 #*********************************
-function id = r_getdepth 
+function id = r_getdepth
 	id = r_getn(":ACQ:MDEP?");
 endfunction
 #*********************************
@@ -223,7 +223,7 @@ function data = wave
 		r_to((i+1)*1200);
 		vxi11_write(com,':WAV:DATA?');
 		d0 = vxi11_read(com, 20000);
-		n = size(d0)(2);
+		nj = size(d0)r=(2);
 		d0 = d0(12:n-1);
 		d1 = (double(d0)-y0-yr)*dy;
 		d1 = d1';
@@ -253,6 +253,7 @@ function im = screenshot
 	global com
 	vxi11_write(com,':DISP:DATA?');
 	d= vxi11_read(com,1200000);
+	d=resize(d,[1 1152068]);
 	d=d(69:1152068);
 	d2=reshape(d,3,800,480);
 	r=reshape(d2(1,:,:),800,480);	
