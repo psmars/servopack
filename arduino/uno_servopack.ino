@@ -46,9 +46,10 @@ void help() {
   Serial.println("M: 00110100 +-");
   Serial.println("G: 00011100 -+");
   Serial.println("O: 00111100 --");
-  Serial.println("P: 00000000 00");
   Serial.println("lower-case letters set bit 6");
   Serial.println("upper-case letters clear bit 6");
+  Serial.println("@: 01000000 00: all clear + set 6");
+  Serial.println("`: 00000000 00: all clear + clear 6");
   Serial.println("");
   Serial.println("Pierre SMARS, 2018");
   prompt();  
