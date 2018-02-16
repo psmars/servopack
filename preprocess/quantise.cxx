@@ -1,18 +1,18 @@
 /*
-Copyright 2016-2018 Pierre SMARS (smars@yuntech.edu.tw)
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
+	 Copyright 2016-2018 Pierre SMARS (smars@yuntech.edu.tw)
+	 This program is free software: you can redistribute it and/or modify
+	 it under the terms of the GNU General Public License as published by
+	 the Free Software Foundation, either version 2 of the License, or
+	 (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+	 This program is distributed in the hope that it will be useful,
+	 but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+	 You should have received a copy of the GNU General Public License
+	 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -24,25 +24,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 enum { OPT_HELP, OPT_2D, OPT_SAMPLING, OPT_INVERT, OPT_SCALE, OPT_MAX, OPT_BIAS };
 
 CSimpleOpt::SOption g_rgOptions[] = {
-	   { OPT_SAMPLING,  _T("-dt"),     SO_REQ_SEP },
-	   { OPT_SAMPLING,  _T("--dt"),     SO_REQ_SEP },
-	   { OPT_SCALE,  _T("-s"),     SO_REQ_SEP },
-	   { OPT_SCALE,  _T("--scale"),     SO_REQ_SEP },
-	   { OPT_MAX,  _T("-m"),     SO_REQ_SEP },
-	   { OPT_MAX,  _T("--max"),     SO_REQ_SEP },
-	   { OPT_BIAS,  _T("-b"),     SO_REQ_SEP },
-	   { OPT_BIAS,  _T("--bias"),     SO_REQ_SEP },
-	   { OPT_INVERT,  _T("-i"),     SO_NONE },
-	   { OPT_INVERT,  _T("--invert"),     SO_NONE },
-           { OPT_2D, _T("-2D"),     SO_NONE    },
-           { OPT_2D, _T("--2D"),     SO_NONE    },
-           { OPT_2D, _T("-2d"),     SO_NONE    },
-           { OPT_2D, _T("--2d"),     SO_NONE    },
-           { OPT_HELP, _T("-?"),     SO_NONE    },
-           { OPT_HELP, _T("-h"),     SO_NONE    },
-           { OPT_HELP, _T("--help"), SO_NONE    },
-           SO_END_OF_OPTIONS
-       };
+	{ OPT_SAMPLING,  _T("-dt"),     SO_REQ_SEP },
+	{ OPT_SAMPLING,  _T("--dt"),     SO_REQ_SEP },
+	{ OPT_SCALE,  _T("-s"),     SO_REQ_SEP },
+	{ OPT_SCALE,  _T("--scale"),     SO_REQ_SEP },
+	{ OPT_MAX,  _T("-m"),     SO_REQ_SEP },
+	{ OPT_MAX,  _T("--max"),     SO_REQ_SEP },
+	{ OPT_BIAS,  _T("-b"),     SO_REQ_SEP },
+	{ OPT_BIAS,  _T("--bias"),     SO_REQ_SEP },
+	{ OPT_INVERT,  _T("-i"),     SO_NONE },
+	{ OPT_INVERT,  _T("--invert"),     SO_NONE },
+	{ OPT_2D, _T("-2D"),     SO_NONE    },
+	{ OPT_2D, _T("--2D"),     SO_NONE    },
+	{ OPT_2D, _T("-2d"),     SO_NONE    },
+	{ OPT_2D, _T("--2d"),     SO_NONE    },
+	{ OPT_HELP, _T("-?"),     SO_NONE    },
+	{ OPT_HELP, _T("-h"),     SO_NONE    },
+	{ OPT_HELP, _T("--help"), SO_NONE    },
+	SO_END_OF_OPTIONS
+};
 
 unsigned int n_samples = 0;
 unsigned int bias = 0;
@@ -59,8 +59,8 @@ unsigned int y_tot = 0;
 //****************************************************
 int error(int val)
 {
-        #include "quantise.help"
-        return val;
+#include "quantise.help"
+	return val;
 }
 //****************************************************
 int max(const unsigned int& a, const unsigned int& b)
@@ -85,7 +85,7 @@ double dec(const double& x)
 //****************************************************
 std::string pulse(const int& v)
 {
-        std::string out;
+	std::string out;
 	if (v==0)
 		out = " 0 0";
 	else if (v==1)
@@ -152,54 +152,54 @@ void fill_black(const unsigned int t, const unsigned int tmax, const short sx, c
 //****************************************************
 int main (int argc, char**argv) 
 {
-        short dim = 1;
-        bool invert = false;
+	short dim = 1;
+	bool invert = false;
 	unsigned int dt = 1;
 	double scale = 1.;
 	unsigned int tmax=255;
 	bool start = false;
 	double v_max = -1.e30;
 	double v_min = 1.e30;
-        CSimpleOpt args(argc, argv, g_rgOptions);
-        while (args.Next())
-        {
-                if (args.LastError() == SO_SUCCESS)
-                {
-                        if (args.OptionId() == OPT_HELP)
-                                return error(0);
-                        else if (args.OptionId() == OPT_2D)
-                                dim=2;
-                        else if (args.OptionId() == OPT_INVERT)
-                                invert = true;
+	CSimpleOpt args(argc, argv, g_rgOptions);
+	while (args.Next())
+	{
+		if (args.LastError() == SO_SUCCESS)
+		{
+			if (args.OptionId() == OPT_HELP)
+				return error(0);
+			else if (args.OptionId() == OPT_2D)
+				dim=2;
+			else if (args.OptionId() == OPT_INVERT)
+				invert = true;
 			else if (args.OptionId() == OPT_SAMPLING)
-                        {
-                                std::istringstream i(args.OptionArg());
-                                i >> dt;
-                        }
+			{
+				std::istringstream i(args.OptionArg());
+				i >> dt;
+			}
 			else if (args.OptionId() == OPT_SCALE)
-                        {
-                                std::istringstream i(args.OptionArg());
-                                i >> scale;
-                        }
+			{
+				std::istringstream i(args.OptionArg());
+				i >> scale;
+			}
 			else if (args.OptionId() == OPT_MAX)
-                        {
-                                std::istringstream i(args.OptionArg());
-                                i >> tmax;
-                        }
+			{
+				std::istringstream i(args.OptionArg());
+				i >> tmax;
+			}
 			else if (args.OptionId() == OPT_BIAS)
-                        {
-                                std::istringstream i(args.OptionArg());
-                                i >> bias;
-                        }
-                        else
-                                return error(-1);
-                                // handle option, using OptionId(), OptionText() and OptionArg()
-                } else {
-                        return error(args.LastError());
-                        // handle error, one of: SO_OPT_INVALID, SO_OPT_MULTIPLE,
-                        // SO_ARG_INVALID, SO_ARG_INVALID_TYPE, SO_ARG_MISSING
-                }
-        }
+			{
+				std::istringstream i(args.OptionArg());
+				i >> bias;
+			}
+			else
+				return error(-1);
+			// handle option, using OptionId(), OptionText() and OptionArg()
+		} else {
+			return error(args.LastError());
+			// handle error, one of: SO_OPT_INVALID, SO_OPT_MULTIPLE,
+			// SO_ARG_INVALID, SO_ARG_INVALID_TYPE, SO_ARG_MISSING
+		}
+	}
 	if (args.FileCount() != 0) return error(-2);
 	if (dt<=0) return error(-3);
 	unsigned int t;
