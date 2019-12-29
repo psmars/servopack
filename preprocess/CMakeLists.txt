@@ -7,6 +7,10 @@ SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 #prepare the use of gzip (necessary for manual pages)
 INCLUDE (FindGZIP.cmake)
 #source files
+SET(C_SOURCES
+  codes2pulses	
+	pulses2wav
+)
 SET(SOURCES 
 	quantise
 	quantise_pic
@@ -22,6 +26,13 @@ FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/help)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/help)
 STRING(REGEX REPLACE ".1" ".1.gz" MAN_GZ "${MAN_SOURCES}")
 #build simple programs
+FOREACH(source ${C_SOURCES})
+  SET(MYDEPS ${source}.c)
+  IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${source}.1)
+    SET(MYDEPS ${MYDEPS} help/${source}.help)
+  ENDIF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${source}.1)
+  ADD_EXECUTABLE(${source} ${MYDEPS})
+ENDFOREACH(source)
 FOREACH(source ${SOURCES})
   SET(MYDEPS ${source}.cxx)
   IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${source}.1)
@@ -49,3 +60,4 @@ FOREACH(source ${MAN_SOURCES})
 ENDFOREACH(source)
 #install files
 INSTALL(TARGETS ${SOURCES} RUNTIME DESTINATION bin)
+INSTALL(TARGETS ${C_SOURCES} RUNTIME DESTINATION bin)
