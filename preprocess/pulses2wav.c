@@ -20,17 +20,19 @@
 int main()
 {
 	int x,y;
+	unsigned int t;
 	uint16_t wait;
 	char code;
 	while (!feof(stdin))    
   {    
 		fread(&wait,sizeof(wait),1,stdin);
 		fread(&code,sizeof(code),1,stdin);
-		char code2 = (code&0x3c)>>0;
+		char code2 = (code&0x0f)>>0;
 		short d2 = code2&0x1;
 		short p2 = (code2>>1)&0x1;
 		short d1 = (code2>>2)&0x1;
 		short p1 = (code2>>3)&0x1;
+		t += wait;
 		if (d1==1)
 			x -= p1;
 		else
@@ -39,10 +41,13 @@ int main()
 			y -= p2;
 		else
 			y += p2;
+		printf("%u %d %d\n",t,x,y);
+		/*
 		for (int i=0; i<wait/10; i++)
 		{
-			printf("%d %d\n",x,y);
+			printf("%u %d %d\n",t,x,y);
 		}
+		*/
 	}
 	return 0;
 }
