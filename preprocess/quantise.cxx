@@ -1,5 +1,5 @@
 /*
-	 Copyright 2016-2018 Pierre SMARS (smars@yuntech.edu.tw)
+	 Copyright 2016-2019 Pierre SMARS (smars@yuntech.edu.tw)
 	 This program is free software: you can redistribute it and/or modify
 	 it under the terms of the GNU General Public License as published by
 	 the Free Software Foundation, either version 2 of the License, or
@@ -14,6 +14,7 @@
 	 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <sstream>
 #include <math.h>
@@ -21,7 +22,7 @@
 
 #include "SimpleOpt.h"
 
-enum { OPT_HELP, OPT_2D, OPT_SAMPLING, OPT_INVERT, OPT_SCALE, OPT_MAX, OPT_BIAS };
+enum { OPT_HELP, OPT_2D, OPT_SAMPLING, OPT_INVERT, OPT_SCALE, OPT_MAX, OPT_BIAS, OPT_BINARY };
 
 CSimpleOpt::SOption g_rgOptions[] = {
 	{ OPT_SAMPLING,  _T("-dt"),     SO_REQ_SEP },
@@ -38,6 +39,8 @@ CSimpleOpt::SOption g_rgOptions[] = {
 	{ OPT_2D, _T("--2D"),     SO_NONE    },
 	{ OPT_2D, _T("-2d"),     SO_NONE    },
 	{ OPT_2D, _T("--2d"),     SO_NONE    },
+	{ OPT_BINARY, _T("-B"),     SO_REQ_SEP    },
+	{ OPT_BINARY, _T("--binary"),     SO_REQ_SEP  },
 	{ OPT_HELP, _T("-?"),     SO_NONE    },
 	{ OPT_HELP, _T("-h"),     SO_NONE    },
 	{ OPT_HELP, _T("--help"), SO_NONE    },
@@ -56,6 +59,9 @@ unsigned int n_pulses_warning = 0;
 unsigned int t_tot = 0;
 unsigned int x_tot = 0;
 unsigned int y_tot = 0;
+bool binary = false;
+std::fstream fout;
+
 //****************************************************
 int error(int val)
 {
@@ -95,7 +101,18 @@ std::string pulse(const int& v)
 	return out;
 }
 //****************************************************
-void output(const unsigned int t, const unsigned int p1, const unsigned int p2)
+void header()
+{
+	fout << "Servopack file" << std::endl;
+	fout << "This header is 275 bytes long." << std::endl;
+	fout << "The rest of the file contains a series of pulses." << std::endl;
+	fout << "Each pulse contains 3 bytes." << std::endl;
+	fout << "The first 2 bytes are unsigned integers: 0-65535 (the time to wait before pulsing)." << std::endl;
+	fout << "The last byte is the pulse driving the servopack." << std::endl;
+	fout << "P. Smars, 2019." << std::endl;
+}
+//****************************************************
+void output(const unsigned int t, const short p1, const short p2)
 {
 	int t0 = t;
 	//first step is always 0 time
@@ -114,7 +131,17 @@ void output(const unsigned int t, const unsigned int p1, const unsigned int p2)
 		shortest_pulse = t0;
 	if (t0>longest_pulse)
 		longest_pulse = t0;
-	std::cout << t0 << pulse(p1) << pulse(p2) << std::endl;
+
+	if (binary)
+	{
+		uint16_t wait = t0;
+		char trig = 0x60 | ((p1!=0)<<4) | ((p1<1)<<3) | ((p2!=0)<<2) | ((p2<1)<<1); 
+		fout.write((char *)&wait,sizeof(wait));
+		fout << trig;
+	}
+	else
+		std::cout << t0 << pulse(p1) << pulse(p2) << std::endl;
+
 	n_pulses++;
 	t_tot += t;
 	x_tot += sgn(p1);
@@ -160,6 +187,7 @@ int main (int argc, char**argv)
 	bool start = false;
 	double v_max = -1.e30;
 	double v_min = 1.e30;
+	std::string filename("noname");
 	CSimpleOpt args(argc, argv, g_rgOptions);
 	while (args.Next())
 	{
@@ -171,6 +199,11 @@ int main (int argc, char**argv)
 				dim=2;
 			else if (args.OptionId() == OPT_INVERT)
 				invert = true;
+			else if (args.OptionId() == OPT_BINARY)
+			{
+				binary = true;
+				filename = args.OptionArg();
+			}
 			else if (args.OptionId() == OPT_SAMPLING)
 			{
 				std::istringstream i(args.OptionArg());
@@ -202,6 +235,12 @@ int main (int argc, char**argv)
 	}
 	if (args.FileCount() != 0) return error(-2);
 	if (dt<=0) return error(-3);
+	if (binary)
+	{
+		tmax = 65535;
+		fout.open(filename.c_str(), std::ios::out | std::ios::binary);
+		header();
+	}
 	unsigned int t;
 	t = 0;
 	double vx,vy;
@@ -307,6 +346,10 @@ int main (int argc, char**argv)
 		}
 	}
 	n_pulses0--;
+	if (binary)
+	{
+		fout.close();
+	}
 	std::cerr << "original_signal: " << n_samples << " samples" << std::endl;
 	std::cerr << "produced_pulses: " << n_pulses << std::endl;
 	std::cerr << " cut_nose: " << n_pulses0 << " " << n_pulses0+t+t_tot << std::endl;
