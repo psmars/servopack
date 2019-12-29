@@ -348,6 +348,10 @@ int main (int argc, char**argv)
 	n_pulses0--;
 	if (binary)
 	{
+		//switch off the led
+		uint16_t wait = 0;
+		fout.write((char *)&wait,sizeof(wait));
+		fout << "`";
 		fout.close();
 	}
 	std::cerr << "original_signal: " << n_samples << " samples" << std::endl;
