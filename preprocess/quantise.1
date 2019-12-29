@@ -1,5 +1,5 @@
 .\"************************************************************
-.TH QUANTISE 1 2016-10-21 Points&Forces "Points&Forces User Commands" 
+.TH QUANTISE 1 2019-12-29 Points&Forces "Points&Forces User Commands" 
 
 .\"************************************************************
 .SH NAME
@@ -8,13 +8,13 @@ quantise \- transforms and scales a uniformly sampled signal into a non-uniform 
 .\"************************************************************
 .SH SYNOPSIS
 .B quantise
-[\-dt INT|\-\-dt INT] [\-s INT|\-\-scale INT] [\-m INT|\-\-max INT] [\-i|\-\-invert] [\-b INT|\-\-bias INT] [\-2d|\-\-2d|\-2D|\-\-2D] [\-?|\-h|\-\-help]
+[\-dt INT|\-\-dt INT] [\-s INT|\-\-scale INT] [\-m INT|\-\-max INT] [\-i|\-\-invert] [\-b INT|\-\-bias INT] [\-2d|\-\-2d|\-2D|\-\-2D] [\-B STRING|\-\-binary STRING] [\-?|\-h|\-\-help]
 
 .\"************************************************************
 .SH DESCRIPTION
 .PP 
 .B quantise
-reads a waveform from the standard input and returns a quantised version to the standard output. Each line of the input consists of (1) 'x' value, and optionally (2) 'y' value. The records are assumed to be uniformly spaced. No assumption is made about meaning and units (interval between samples and scale of data). Options \-\-dt and \-\-scale are meant to produce a meaningful output. Each line of the output consists of an interval of (let us say) time, and codes indicating (1) whether a pulse needs to be triggered in the direction of 'x', (2) its sign, (3) whether a pulse needs to be triggered in the 'y' direction, (4) its sign. By default, only 'x' is used. Option \-\-2D produces data for 'x' and 'y'.
+reads a waveform from the standard input and returns a quantised version to the standard output (or to a binary file if the option is set). Each line of the input consists of (1) 'x' value, and optionally (2) 'y' value. The records are assumed to be uniformly spaced. No assumption is made about meaning and units (interval between samples and scale of data). Options \-\-dt and \-\-scale are meant to produce a meaningful output. Each line of the output consists of an interval of (let us say) time, and codes indicating (1) whether a pulse needs to be triggered in the direction of 'x', (2) its sign, (3) whether a pulse needs to be triggered in the 'y' direction, (4) its sign. By default, only 'x' is used. Option \-\-2D produces data for 'x' and 'y'.
 
 .PD
 .\"************************************************************
@@ -43,6 +43,10 @@ reads and output data for 'x' and 'y' displacements. The defaults is only to rea
 .TP
 .BR \-i "," \-\-invert
 inverts the meaning of 'x' and 'y'.
+
+.TP
+.BI \-B " STRING" "\fR,\fP \-\-binary " STRING
+Output the data in binary format to the file specified by STRING. Option \m is deactivated: the maximum time interval is fixed to an unsigned 16bit integer.  
 
 .TP
 .BR \-h "," \-\-help "," \-?
