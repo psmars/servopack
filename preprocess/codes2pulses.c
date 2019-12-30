@@ -23,10 +23,10 @@ int main(int argc, char** argv)
 		if (fscanf(stdin,"%s %c", buffer,&code)==2)
 		{
 			char code2;
-			code2 = ((code<<1)&0x40)|(code<<2)&0x7c;
+			code2 = ((code<<1)&0x40)|((code<<2)&0x7c);
 	    awave.wait = atoi(buffer);
 	    awave.code = code2;
-	    printf("wait:%lu code:%c\n",atoi(buffer),code);
+	    printf("wait:%u code:%c\n",atoi(buffer),code);
 	    fwrite(&awave,sizeof(awave)-1,1,in);
 		}
 	}
