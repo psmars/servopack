@@ -51,7 +51,7 @@ void help() {
   Serial.println("@: 01000000 00: all clear + set 6");
   Serial.println("`: 00000000 00: all clear + clear 6");
   Serial.println("");
-  Serial.println("Pierre SMARS, 2018");
+  Serial.println("Pierre SMARS, 2018-2020");
   prompt();  
 }
 //************************
@@ -65,13 +65,20 @@ void loop() {
     else {
       //shift 2 bits left the 4 mvt bits to stay clear of bit 0-1 used for serial communication
       //shift 1 bit  left the LED bit to put it in position 6
-      code2 = ((code<<1)&B01000000)|(code<<2);
-      PORTD = code2&B01111100;
-      //just enough to give a 1 us pulse
-      __builtin_avr_delay_cycles(14);
-      //glitch;
-      //the pulse is given to bits 2 and 4, they other bits are untouched
+      //bits 2 and 4 are used to give a pulse, triggering mvt
       //bits 3 and 5 are used to fix the direction of mvt
+      code2 = ((code<<1)&B01000000)|(code<<2);
+			//adjust the direction
+      PORTD = code2&B01101000;
+			//wait at least 3us: 3.5us for safety
+      __builtin_avr_delay_cycles(54);
+			//give a pulse
+      PORTD = code2&B01111100;
+      //wait at least 1.1us: 1.5us for safety
+      //__builtin_avr_delay_cycles(14); (1us)
+      __builtin_avr_delay_cycles(23);
+      //glitch;
+      //the pulse is cleared on bits 2 and 4, they other bits are untouched
       PORTD = code2&B01101000;
       //Serial.println(code);
     }
