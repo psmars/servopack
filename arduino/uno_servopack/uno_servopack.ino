@@ -1,5 +1,5 @@
 /*
-	 Copyright 2018 Pierre SMARS (smars@yuntech.edu.tw)
+	 Copyright 2018-2021 Pierre SMARS (smars@yuntech.edu.tw)
 	 This program is free software: you can redistribute it and/or modify
 	 it under the terms of the GNU General Public License as published by
 	 the Free Software Foundation, either version 2 of the License, or
@@ -16,8 +16,9 @@
 //************************
 void setup() {
  DDRD |= B11111100;
- PORTD &= B11111111;
+ PORTD = B00000000;
  Serial.begin(115200);
+ Serial.println("...");
  delay(2000);
  help();
 }
@@ -32,12 +33,13 @@ void help() {
   Serial.println("");
   Serial.println("Servopack controller");
   Serial.println("*************************");
-  Serial.println("Sents one microsecond pulses to the servopack");
+  Serial.println("Sents 1.5 microsecond pulses to the servopack");
   Serial.println("to control the steps to give to the servomotors");
+  Serial.println("the direction of mvt is set 3.5 microseconds before the pulses");
   Serial.println("PORTD of Arduino Uno is used (Digital 2-6)");
   Serial.println("h: this help message");
   Serial.println("bits 2-5 are used to control the movements");
-  Serial.println("bit 6 is used to control the LED");
+  Serial.println("bit 6 is used to send synchronising signals (LED..)");
   Serial.println("A: 00000100 +0");
   Serial.println("C: 00001100 -0");
   Serial.println("D: 00010000 0+");
@@ -51,7 +53,7 @@ void help() {
   Serial.println("@: 01000000 00: all clear + set 6");
   Serial.println("`: 00000000 00: all clear + clear 6");
   Serial.println("");
-  Serial.println("Pierre SMARS, 2018-2020");
+  Serial.println("Pierre SMARS, 2018-2021");
   prompt();  
 }
 //************************
@@ -77,11 +79,9 @@ void loop() {
       //wait at least 1.1us: 1.5us for safety
       //__builtin_avr_delay_cycles(14); (1us)
       __builtin_avr_delay_cycles(23);
-      //glitch;
       //the pulse is cleared on bits 2 and 4, they other bits are untouched
       PORTD = code2&B01101000;
       //Serial.println(code);
     }
   }
 }
-
