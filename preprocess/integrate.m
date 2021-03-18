@@ -27,9 +27,9 @@ exf = filter(b,a,ex);
 plot(t,exf)
 %experiment with other cut-off frequencies
 fid = fopen ("exf", "w");
-fprintf(fid,"# Sampling rate: %f/s\n",fs);
-fprintf(fid,"# Unit: m");
-fprintf(fid,"# data is not scaled");
+fprintf(fid,"# Sampling rate: %f Hz\n",fs);
+fprintf(fid,"# Unit: m\n");
+fprintf(fid,"# data is not scaled\n");
 fclose(fid);
 save exf exf -append
 
