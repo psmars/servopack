@@ -25,25 +25,25 @@ set w 1
 #****************************
 proc plus_x {} {
         global com w
-        puts -nonewline $com "A";
+        puts -nonewline $com "x";
         after $w
 }
 #****************************
 proc minus_x {} {
         global com w
-        puts -nonewline $com "C";
+        puts -nonewline $com "X";
         after $w
 }
 #****************************
 proc plus_y {} {
         global com w
-        puts -nonewline $com "D";
+        puts -nonewline $com "y";
         after $w
 }
 #****************************
 proc minus_y {} {
         global com w
-        puts -nonewline $com "L";
+        puts -nonewline $com "Y";
         after $w
 }
 #****************************
@@ -58,19 +58,19 @@ proc home {} {
 	after 100
 
 	for {set i 0} {$i < 400} {incr i} {
-	        puts -nonewline $com "A"
+	        puts -nonewline $com "X"
         	after 2;
 	}
-	for {set i 0} {$i < 200} {incr i} {
-        	puts -nonewline $com "C"
+	for {set i 0} {$i < 182} {incr i} {
+        	puts -nonewline $com "x"
 	        after 2;
 	}
 	for {set i 0} {$i < 400} {incr i} {
-        	puts -nonewline $com "D"
+        	puts -nonewline $com "Y"
 	        after 2;
 	}
-	for {set i 0} {$i < 185} {incr i} {
-        	puts -nonewline $com "L"
+	for {set i 0} {$i < 165} {incr i} {
+        	puts -nonewline $com "y"
 	        after 2;
 	}
 	after 2;
