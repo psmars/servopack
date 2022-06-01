@@ -12,11 +12,11 @@ maximum time between steps is 65535us
 
 - adapt from:
 
-> cat displacement_data | quantise -s 100 -dt 500 -m 255 | quantise_esp32.awk > running_commands
+> cat displacement_data | quantise -s 100 -dt 500 -m 65535 -2d | quantise_esp32.awk > running_commands
 
-i- or, on freebsd:
+- or, on freebsd:
 
-> cat displacement_data | quantise -s 100 -dt 500 -m 255 | gawk -f ./quantise_esp32.awk > running_commands
+> cat displacement_data | quantise -s 100 -dt 500 -m 65535 | gawk -f ./quantise_esp32.awk > running_commands
 
 - cut header from binary file
 
