@@ -8,7 +8,7 @@
 #n: number of samples
 function [t, sig, n] = burst (freq, ag, time, dt)
 	w=2*pi*freq;
-	t=0:dt:time;
+	t=(0:dt:time)';
 	n=size(t)(1);
 	f2=1./(2*time);
 	w2=2*pi*f2;
