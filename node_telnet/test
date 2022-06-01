@@ -1,0 +1,50 @@
+#### A test file ####
+# lines staring by # are comments
+# time intervals are in ms
+# space intervals are in 100um
+# 'clear' clears the memory
+clear
+# '2000a' means: step in positive x direction after 2ms
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000a
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+2000c
+enable x
+disable y
+
