@@ -1,5 +1,5 @@
 .\"************************************************************
-.TH QUANTISE 1 2019-12-29 Points&Forces "Points&Forces User Commands" 
+.TH QUANTISE 1 2022-06-01 Points&Forces "Points&Forces User Commands" 
 
 .\"************************************************************
 .SH NAME
@@ -14,7 +14,21 @@ quantise \- transforms and scales a uniformly sampled signal into a non-uniform 
 .SH DESCRIPTION
 .PP 
 .B quantise
-reads a waveform from the standard input and returns a quantised version to the standard output (or to a binary file if the option is set). Each line of the input consists of (1) 'x' value, and optionally (2) 'y' value. The records are assumed to be uniformly spaced. No assumption is made about meaning and units (interval between samples and scale of data). Options \-\-dt and \-\-scale are meant to produce a meaningful output. Each line of the output consists of an interval of (let us say) time, and codes indicating (1) whether a pulse needs to be triggered in the direction of 'x', (2) its sign, (3) whether a pulse needs to be triggered in the 'y' direction, (4) its sign. By default, only 'x' is used. Option \-\-2D produces data for 'x' and 'y'.
+reads data points (typically time series) from the standard input
+and returns a quantised version to the standard output (or to a binary file if the option is set).
+Each line of the input consists of (1) 'x' value, and optionally (2) 'y' value (space separated).
+The records are assumed to be uniformly spaced.
+Typically, the intervals are time intervals
+but no assumption is made about meaning and units (interval between samples and scale of data).
+Lines starting with '#' are comments and are ignored.
+Options \-\-dt and \-\-scale are meant to produce a meaningful output.
+Each line of the output consists of an interval of (let us say) time, and codes indicating
+(1) whether a pulse needs to be triggered in the direction of 'x',
+(2) its sign,
+(3) whether a pulse needs to be triggered in the 'y' direction,
+(4) its sign.
+By default, only 'x' is used.
+Option \-\-2D produces data for 'x' and 'y'.
 
 .PD
 .\"************************************************************
@@ -63,11 +77,11 @@ Reports of bugs or problems should be submitted via electronic mail to <smars@yu
 
 .\"************************************************************
 .SH COPYRIGHT
-Copyright (C) 2016-18 Pierre Smars.   License  GPLv2
+Copyright (C) 2016-22 Pierre Smars.   License  GPLv2
 <http://www.gnu.org/licenses/gpl-2.0.html>.
 This  is  free  software:  you  are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 
 .\"************************************************************
 .SH "SEE ALSO"
-quantise_pic.awk
+quantise_esp32.awk, quantise_pic.awk
