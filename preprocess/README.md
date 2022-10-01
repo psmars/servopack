@@ -4,11 +4,18 @@ author: Pierre Smars
 date: \today
 ---
 
-displacement_data: xy displacements in meter\
-displacement_data: sampling frequency 200Hz\
-model scale is 1/100 and steps of servopack are 100um -> space scale=1.e4/100=100\
-time is scaled 1/10, controller time unit is us -> time scale=1.e6/(200x10)=500\
-maximum time between steps is 65535us
+# An example file is given: *displacement_data*
+
+- two columns: x and y displacements in meter
+- sampling frequency 200Hz
+
+# Scaling data 
+
+- model scale is 1/100 and steps of servopack are 100um -> space scale=1.e4/100=100\
+- time is scaled 1/10, controller time unit is us -> time scale=1.e6/(200x10)=500\
+- maximum time between steps is 65535us
+
+# Processing 
 
 - adapt from:
 
@@ -29,8 +36,12 @@ maximum time between steps is 65535us
 
 - in octave
 > load wave_file
+
 > t=wave_file(:,1);
+
 > x=wave_file(:,2);
+
 > y=wave_file(:,3);
+
 > plot(t,x,t,y)
 
