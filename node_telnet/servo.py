@@ -12,7 +12,7 @@ dico = {
     '1-1' : 'm',
     '-1-1': 'o',
 }
-wait=0.01
+wait=10000
 tn=0
 
 def command(text):
@@ -49,15 +49,16 @@ def help():
     print("X()           : go one step in the -x direction")
     print("y()           : go one step in the  y direction")
     print("Y()           : go one step in the -y direction")
-    print("dx(dist)      : move 'dist' mm in x direction")
-    print("dy(dist)      : move 'dist' mm in y direction")
-    print("interval(wait): wait 'time' in between steps of dx() and dy()")
+    print("dx(dist)      : move 'dist' mm in x direction (! clears the memory)")
+    print("dy(dist)      : move 'dist' mm in y direction (! clears the memory)")
+    print("interval(wait): wait 'time' (ms) in between steps of dx() and dy()")
     print("")
     print("Delayed movement control:")
     print("........................")
     print("clear()          : clear steps memory")
     print("steps()          : return the number of steps stored in memory (max: 20000)")
     print("step(delay,dx,dy): (with dx,dy=-1|0|1): store one step in memory, to be run after delay (in microseconds, 10<delay<65535)")
+    print("load(file_name)  : read commands, typically steps, from 'file_name' (memory is cleared before)")
     print("run()            : run the steps in memory")
     print("")
     print("LEDs:")
@@ -70,7 +71,7 @@ def help():
 
 def interval(dt):
     global wait
-    wait=dt/1000
+    wait=dt*1000
 
 def U():
     command("U")
@@ -132,25 +133,56 @@ def clear():
 def run():
     command("run")
 
+def iddle():
+    global wait
+    n=int(wait/65000);
+    for i in range(n):
+        step(65000,0,0)
+
 def dx(val):
     global wait
+    clear()
     if (val>0):
         for i in range(val*10):
-            x()
-            time.sleep(wait)
+            if (wait>65000):
+                iddle()
+            step(wait%65000,1,0)
     elif (val<0):
         for i in range(-val*10):
-            X()
-            time.sleep(wait)
+            if (wait>65000):
+                iddle()
+            step(wait%65000,-1,0)
+    run()
+    clear()
 
 def dy(val):
     global wait
+    clear()
     if (val>0):
         for i in range(val*10):
-            y()
-            time.sleep(wait)
+            if (wait>65000):
+                iddle()
+            step(wait%65000,0,1)
     elif (val<0):
         for i in range(-val*10):
-            Y()
-            time.sleep(wait)
+            if (wait>65000):
+                iddle()
+            step(wait%65000,0,1)
+    run()
+    clear()
+
+def load(file_name):
+    global tn
+    clear()
+    f = open(file_name,"r")
+    i = 0
+    for x in f:
+        if (x[0] != "#"):
+            i = i+1
+            if (i>20000):
+                print("Too many steps!!")
+                return
+            tn.write(x.encode('ascii'))
+            msg=tn.read_until(b"> ",timeout=1)
+            print(i)
 
