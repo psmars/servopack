@@ -1,6 +1,6 @@
 #### A test file ####
 # lines staring by # are comments
-# time intervals are in ms
+# time intervals are in us
 # space intervals are in 100um
 # 'clear' clears the memory
 clear
