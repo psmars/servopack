@@ -30,6 +30,44 @@ def logout():
     global tn
     tn.close()
 
+def help():
+    print("")
+    print("Servopack Control (python library)")
+    print("-----------------")
+    print("")
+    print("login()    : connect to the searvopack")
+    print("logout()   : disconnect from the searvopack")
+    print("enable_x() : enable transmission in direction x")
+    print("disable_x(): disable transmission in direction x")
+    print("enable_y() : enable transmission in direction y")
+    print("disable_y(): disable transmission in direction y")
+    print("")
+    print("Direct movement control:")
+    print(".......................")
+    print("home()        : go home, recentre table")
+    print("x()           : go one step in the  x direction")
+    print("X()           : go one step in the -x direction")
+    print("y()           : go one step in the  y direction")
+    print("Y()           : go one step in the -y direction")
+    print("dx(dist)      : move 'dist' mm in x direction")
+    print("dy(dist)      : move 'dist' mm in y direction")
+    print("interval(wait): wait 'time' in between steps of dx() and dy()")
+    print("")
+    print("Delayed movement control:")
+    print("........................")
+    print("clear()          : clear steps memory")
+    print("steps()          : return the number of steps stored in memory (max: 20000)")
+    print("step(delay,dx,dy): (with dx,dy=-1|0|1): store one step in memory, to be run after delay (in microseconds, 10<delay<65535)")
+    print("run()            : run the steps in memory")
+    print("")
+    print("LEDs:")
+    print("....")
+    print("U() : switch on  LED x")
+    print("u() : switch off LED x")
+    print("V() : switch on  LED y")
+    print("v() : switch off LED y")
+    print("")
+
 def interval(dt):
     global wait
     wait=dt/1000
@@ -70,7 +108,7 @@ def enable_y():
 def disable_y():
     command("disable y")
 
-def pulse(delay,dx,dy):
+def step(delay,dx,dy):
     global tn, dico
     delay=max(10,delay%65535)
     code = dico.get(str(dx)+str(dy))
@@ -78,7 +116,7 @@ def pulse(delay,dx,dy):
     tn.write(s.encode('ascii'))
     msg=tn.read_until(b"> ",timeout=1)
 
-def pulses():
+def steps():
     global tn
     tn.write(b"pulses\n")
     msg=tn.read_until(b"> ",timeout=1)
