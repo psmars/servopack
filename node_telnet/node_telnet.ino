@@ -1,18 +1,19 @@
-/*    
-   Copyright 2018-2022 Pierre SMARS (smars@yuntech.edu.tw)    
-   This program is free software: you can redistribute it and/or modify    
-   it under the terms of the GNU General Public License as published by    
-   the Free Software Foundation, either version 2 of the License, or    
-   (at your option) any later version.    
-     
-   This program is distributed in the hope that it will be useful,    
-   but WITHOUT ANY WARRANTY; without even the implied warranty of    
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    
-   GNU General Public License for more details.    
-     
-   You should have received a copy of the GNU General Public License    
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.    
-   */    
+/*
+			Copyright 2018-2022 Pierre SMARS (smars@yuntech.edu.tw)
+			This program is free software: you can redistribute it and/or modify
+			it under the terms of the GNU General Public License as published by
+			the Free Software Foundation, either version 2 of the License, or
+			(at your option) any later version.
+
+			This program is distributed in the hope that it will be useful,
+			but WITHOUT ANY WARRANTY; without even the implied warranty of
+			MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+			GNU General Public License for more details.
+
+			You should have received a copy of the GNU General Public License
+			along with this program.  If not, see <http://www.gnu.org/licenses/>.
+			*/
+//Made for ESP32 Dev Module
 //************************
 #include <WiFi.h>
 #include <string.h>
@@ -47,7 +48,7 @@ void setup() {
 	Serial.begin(115200);
 	delay(100);
 	Serial.println("...");
-	delay(1000);  
+	delay(1000);
 	connectToNetwork();
 	Serial.println(WiFi.macAddress());
 	Serial.println(WiFi.localIP());
@@ -107,11 +108,14 @@ void run()
 	uint64_t micro;
 	for (uint16_t i=0; i<address; i++)
 	{
-		micro = esp_timer_get_time();
-		wait = pulses[i].duration;
+		wait = pulses[i].duration/10;
 		code = pulses[i].code;
-		step_0(code);
-		while (esp_timer_get_time()-micro<wait) {}  
+		for (uint8_t j=0; j<10; j++)
+		{
+			micro = esp_timer_get_time();
+			step_0(code);
+			while (esp_timer_get_time()-micro<wait) {}
+		}
 	}
 	prompt();
 }
@@ -181,12 +185,12 @@ void wait(char * buf)
 	uint64_t micro = esp_timer_get_time();
 	uint16_t duration;
 	duration = atoi(pch);
-	if ((duration>0)&&(strcmp(code,"wait")==0))  
+	if ((duration>0)&&(strcmp(code,"wait")==0))
 	{
 		while (esp_timer_get_time()-micro<duration*1000) {}
 	}
 	prompt();
-} 
+}
 //************************
 void led_x_on()
 {
@@ -292,7 +296,7 @@ void help() {
 	client.println("pulses: return the number of pulses in memory");
 	client.println("");
 	client.println("Pierre SMARS, 2021-22");
-	client.println("ver. 2022-06-01");
+	client.println("ver. 2022-11-12");
 	prompt();
 }
 //*********************************
@@ -315,7 +319,7 @@ void loop() {
 					buf[pos] = c;
 					buf[pos+1] = '\0';
 					pos = (pos+1);
-				}      
+				}
 			}
 			if (strlen(buf)>0)
 			{
@@ -350,7 +354,7 @@ void loop() {
 				else if (strcmp(buf,"clear")==0)
 					clear();
 				else if (strcmp(buf,"pulses")==0)
-					number();          
+					number();
 				else if (strcmp(buf,"dump")==0)
 					dump();
 				else if (strcmp(buf,"x")==0)
@@ -360,7 +364,7 @@ void loop() {
 				else if (strcmp(buf,"y")==0)
 					step('d');
 				else if (strcmp(buf,"Y")==0)
-					step('l');                                 
+					step('l');
 				else if (strcmp(buf,"u")==0)
 					led_x_off();
 				else if (strcmp(buf,"U")==0)
@@ -376,16 +380,16 @@ void loop() {
 				else if (strcmp(buf,"enable y")==0)
 					enable_y();
 				else if (strcmp(buf,"disable y")==0)
-					disable_y();          
+					disable_y();
 				else if (buf[0]!=' ')
 				{
 					client.println("syntax error!");
 					prompt();
-				}         
+				}
 			}
 			delay(10);
 		}
 		client.stop();
 		Serial.println("Client disconnected");
-	}  
+	}
 }
