@@ -15,47 +15,59 @@
 import telnetlib
 import time
 import matplotlib.pyplot as plt
+
+# name of the ESP32 servo controller
 host = "servo"
+
+######################################
+# dictionaries: xy to servo_code, servo_code to xy
 pulse2code = {
-    '00'  : 'p',
-    '10'  : 'a',
-    '-10' : 'c',
-    '01'  : 'd',
-    '0-1' : 'l',
-    '11'  : 'e',
-    '-11' : 'g',
-    '1-1' : 'm',
-    '-1-1': 'o',
-}
+        '00'  : 'p',
+        '10'  : 'a',
+        '-10' : 'c',
+        '01'  : 'd',
+        '0-1' : 'l',
+        '11'  : 'e',
+        '-11' : 'g',
+        '1-1' : 'm',
+        '-1-1': 'o',
+        }
 code2pulse = {
-  "a": "1 0",
-  "c": "-1 0",
-  "d": "0 1",
-  "l": "0 -1",
-  "e": "1 1",
-  "m": "1 -1",
-  "g": "-1 1",
-  "o": "-1 -1",
-  "p": "0 0"
-}
+        "a": "1 0",
+        "c": "-1 0",
+        "d": "0 1",
+        "l": "0 -1",
+        "e": "1 1",
+        "m": "1 -1",
+        "g": "-1 1",
+        "o": "-1 -1",
+        "p": "0 0"
+        }
+######################################
+# default interval (us) between steps
 wait=10000
+# tcp/ip habdle
 tn=0
 
-def command(text):
+######################################
+def command(text,wait_time=1):
     global tn
     s = text+'\n'
     tn.write(s.encode('ascii'))
-    msg=tn.read_until(b"> ",timeout=1)
+    msg=tn.read_until(b"> ",timeout=wait_time)
 
+######################################
 def login():
     global tn
     tn = telnetlib.Telnet(host)
     tn.read_until(b"> ",timeout=1)
 
+######################################
 def logout():
     global tn
     tn.close()
 
+######################################
 def help():
     print("")
     print("Servopack Control (python library)")
@@ -98,46 +110,60 @@ def help():
     print("Pierre Smars, version: 2022-11-14")
     print("")
 
+######################################
 def interval(dt):
     global wait
     wait=dt*1000
 
+######################################
 def U():
     command("U")
 
+######################################
 def u():
     command("u")
 
+######################################
 def V():
     command("V")
 
+######################################
 def v():
     command("v")
 
+######################################
 def x():
     command("x")
 
+######################################
 def X():
     command("X")
 
+######################################
 def y():
     command("y")
 
+######################################
 def Y():
     command("Y")
 
+######################################
 def enable_x():
     command("enable x")
 
+######################################
 def disable_x():
     command("disable x")
 
+######################################
 def enable_y():
     command("enable y")
 
+######################################
 def disable_y():
     command("disable y")
 
+######################################
 def step(delay,dx,dy):
     global tn, pulse2code
     delay=max(10,delay%65535)
@@ -146,6 +172,7 @@ def step(delay,dx,dy):
     tn.write(s.encode('ascii'))
     msg=tn.read_until(b"> ",timeout=1)
 
+######################################
 def steps():
     global tn
     tn.write(b"pulses\n")
@@ -153,6 +180,7 @@ def steps():
     r=msg.decode('ascii')
     return int(r[:-11]) 
 
+######################################
 def plot():
     global tn
     t=[]
@@ -186,21 +214,27 @@ def plot():
     plt.legend()
     plt.show()
 
+######################################
 def home():
     command("home")
 
+######################################
 def clear():
     command("clear")
 
-def run():
-    command("run")
+######################################
+def run(num=1):
+    for i in range(num):
+        command("run",wait_time=10)
 
+######################################
 def iddle():
     global wait
     n=int(wait/65000);
     for i in range(n):
         step(65000,0,0)
 
+######################################
 def dx(val):
     global wait
     clear()
@@ -217,6 +251,7 @@ def dx(val):
     run()
     clear()
 
+######################################
 def dy(val):
     global wait
     clear()
@@ -233,6 +268,7 @@ def dy(val):
     run()
     clear()
 
+######################################
 def load(file_name):
     global tn
     clear()
