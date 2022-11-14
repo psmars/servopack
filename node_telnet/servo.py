@@ -1,7 +1,8 @@
 import telnetlib
 import time
+import matplotlib.pyplot as plt
 host = "servo"
-dico = {
+pulse2code = {
     '00'  : 'p',
     '10'  : 'a',
     '-10' : 'c',
@@ -11,6 +12,17 @@ dico = {
     '-11' : 'g',
     '1-1' : 'm',
     '-1-1': 'o',
+}
+code2pulse = {
+  "a": "1 0",
+  "c": "-1 0",
+  "d": "0 1",
+  "l": "0 -1",
+  "e": "1 1",
+  "m": "1 -1",
+  "g": "-1 1",
+  "o": "-1 -1",
+  "p": "0 0"
 }
 wait=10000
 tn=0
@@ -60,6 +72,7 @@ def help():
     print("step(delay,dx,dy): (with dx,dy=-1|0|1): store one step in memory, to be run after delay (in microseconds, 10<delay<65535)")
     print("load(file_name)  : read commands, typically steps, from 'file_name' (memory is cleared before)")
     print("run()            : run the steps in memory")
+    print("plot()           : plot the time series")
     print("")
     print("LEDs:")
     print("....")
@@ -67,6 +80,8 @@ def help():
     print("u() : switch off LED x")
     print("V() : switch on  LED y")
     print("v() : switch off LED y")
+    print("")
+    print("Pierre Smars, version: 2022-11-14")
     print("")
 
 def interval(dt):
@@ -110,9 +125,9 @@ def disable_y():
     command("disable y")
 
 def step(delay,dx,dy):
-    global tn, dico
+    global tn, pulse2code
     delay=max(10,delay%65535)
-    code = dico.get(str(dx)+str(dy))
+    code = pulse2code.get(str(dx)+str(dy))
     s = str(delay)+code+'\n'
     tn.write(s.encode('ascii'))
     msg=tn.read_until(b"> ",timeout=1)
@@ -123,6 +138,39 @@ def steps():
     msg=tn.read_until(b"> ",timeout=1)
     r=msg.decode('ascii')
     return int(r[:-11]) 
+
+def plot():
+    global tn
+    t=[]
+    x=[]
+    y=[]
+    tt=xt=yt=0.
+    tn.write(b"dump\n")
+    msg=tn.read_until(b"> ",timeout=10)
+    data=msg.decode('ascii')
+    lines = data.split()
+    for li in lines[:-1]:
+        delay = float(li[:-1])/10./1000.
+        code = code2pulse[li[-1:]].split()
+        dx = float(code[0])*0.01
+        dy = float(code[1])*0.01
+        for j in range(10):
+            tt = round(tt+delay,3)
+            t.append(tt)
+            x.append(xt)
+            y.append(yt)
+            xt = round(xt+dx,3)
+            yt = round(yt+dy,3)
+            t.append(tt)
+            x.append(xt)
+            y.append(yt)
+    plt.plot(t,x,label='x')
+    plt.plot(t,y,label='y')
+    plt.xlabel('t [ms]')
+    plt.ylabel('d [mm]')
+    plt.title('Time series')
+    plt.legend()
+    plt.show()
 
 def home():
     command("home")
