@@ -184,7 +184,7 @@ int main (int argc, char**argv)
 	unsigned int dt = 1;
 	double scale = 1.;
 	unsigned int tmax=255;
-	bool start = false;
+	bool started = false;
 	double v_max = -1.e30;
 	double v_min = 1.e30;
 	std::string filename("noname");
@@ -294,7 +294,7 @@ int main (int argc, char**argv)
 				}
 				short sx =0;
 				short sy =0;
-				if (!start)
+				if (!started)
 					n_pulses0++;
 				if ((vx != vx0)||(vy != vy0))
 				{
@@ -308,12 +308,9 @@ int main (int argc, char**argv)
 						sy = vy-vy0;
 						vy0 = vy;
 					}
-					if ((!start)&&((sx!=0)||(sy!=0)))
-					{
-						start=true;
-						t=0;
-					}
-					if (start)
+					if ((!started)&&((sx!=0)||(sy!=0)))
+						started=true;
+					if (started)
 					{
 						int s_max=max(fabs(sx),fabs(sy));
 						if ((s_max>1)&&(t>dt))
