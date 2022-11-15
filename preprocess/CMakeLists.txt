@@ -13,7 +13,6 @@ SET(C_SOURCES
 )
 SET(SOURCES 
 	quantise
-	quantise_pic
 )
 SET(ALL_PROGRAMS
 	${SOURCES}
