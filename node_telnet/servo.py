@@ -107,7 +107,7 @@ def help():
     print("V() : switch on  LED y")
     print("v() : switch off LED y")
     print("")
-    print("Pierre Smars, version: 2022-11-14")
+    print("Pierre Smars, version: 2022-12-14")
     print("")
 
 ######################################
@@ -264,7 +264,7 @@ def dy(val):
         for i in range(-val*10):
             if (wait>65000):
                 iddle()
-            step(wait%65000,0,1)
+            step(wait%65000,0,-1)
     run()
     clear()
 
