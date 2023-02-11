@@ -12,18 +12,18 @@
 
 			You should have received a copy of the GNU General Public License
 			along with this program.  If not, see <http://www.gnu.org/licenses/>.
-			*/
+ */
 //Made for ESP32 Dev Module
 //************************
 #include <WiFi.h>
 #include <string.h>
 //************************
 uint32_t address;
-const uint32_t recs = 20000;
-struct pulse {
+const uint32_t recs = 21000;
+typedef struct {
 	uint16_t duration;
 	byte code;
-};
+} pulse;
 pulse pulses[recs];
 const char* ssid = "your_ssid";
 const char* password = "your_password";
@@ -66,7 +66,7 @@ void dump()
 	Serial.println("Dumping memory...");
 	uint16_t wait;
 	char code;
-	for (uint16_t i=0; i<address; i++)
+	for (uint32_t i=0; i<address; i++)
 	{
 		wait = pulses[i].duration;
 		code = pulses[i].code;
@@ -106,7 +106,7 @@ void run()
 	char code;
 	uint32_t step;
 	uint64_t micro;
-	for (uint16_t i=0; i<address; i++)
+	for (uint32_t i=0; i<address; i++)
 	{
 		wait = pulses[i].duration/10;
 		code = pulses[i].code;
