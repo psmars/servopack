@@ -1,5 +1,5 @@
 ---
-title: "Shaking table: python utilities installation"
+title: "Shaking table: python postprocessing tools installation"
 author: Pierre Smars
 date: \today
 ---
@@ -20,19 +20,19 @@ Install the utilities:
 
 # For use
 
-If not yet done, activate the environment.
+Activate the environment if it is not yet done.
 Go to the directory with the data:
 
 - cd /where/is/the/data
 
 Use one the utility:
 
-- transfer filename
-- run
-- python
-	- from servo import *
-	- help()
+- detect_markers
+- movie_blocks
+- movie_blocks_bg
+- homography_ref
+- homography
 
-To deactivate the environment
+To desactivate the environment
 
 - deactivate
