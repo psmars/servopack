@@ -10,7 +10,7 @@ setup(
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     scripts=['src/run','src/transfer'],
-    install_requires=["matplotlib"],
+    install_requires=["matplotlib==3.7.1"],
     license = "GNU General Public License ver. 2",
 )
 
