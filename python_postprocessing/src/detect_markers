@@ -28,8 +28,9 @@ from pathlib import Path
 
 markers_filename = Path(filename).stem + ".csv"
 
-dictionary = aruco.Dictionary_get(aruco.DICT_4X4_50)
-parameters = cv2.aruco.DetectorParameters_create()
+dictionary = aruco.getPredefinedDictionary(aruco.DICT_4X4_50)
+parameters = aruco.DetectorParameters()
+detector = aruco.ArucoDetector(dictionary, parameters)
 
 if (len(sys.argv)==1):
     cap = cv2.VideoCapture(0)
@@ -43,7 +44,7 @@ frame_nr=0
 while True:
     ret, frame = cap.read()
     if ret==True:
-        (corners, ids, rejected) = cv2.aruco.detectMarkers(frame, dictionary, parameters=parameters)
+        (corners, ids, rejected) = detector.detectMarkers(frame)
         if len(corners)>0:
             aruco.drawDetectedMarkers(frame,corners,ids)
             ids = ids.flatten()
