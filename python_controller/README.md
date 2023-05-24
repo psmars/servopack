@@ -21,6 +21,9 @@ Install the utilities:
 # For use
 
 If not yet done, activate the environment.
+
+- source venv/bin/activate
+
 Go to the directory with the data:
 
 - cd /where/is/the/data
