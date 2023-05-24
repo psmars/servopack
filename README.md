@@ -9,10 +9,12 @@
 
 ## Software
 
-- Tools to pre-process the data (discretise a time series in a series of 10um pulses)
-- A firmware for the microcontroller
-- A python library to interact with the microcontroller and control the table
-- Tools to process video recordings
+- Tools to pre-process the data (discretise a time series in a series of 10um pulses) (pre-processing)
+- A firmware for the microcontroller (esp32_firmware)
+- A python library to interact with the microcontroller and control the table (python_controller)
+- Tools to process video recordings (python_postprocessing)
+- Libraries to interact with oscilloscope: used for debugging (scope)
+- A firmware for an ADXL355 accelerometer module (accelerometer_firmware)
 
 ## References
 
