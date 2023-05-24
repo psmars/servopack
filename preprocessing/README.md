@@ -11,8 +11,8 @@ date: \today
 
 # Scaling data 
 
-- model scale is 1/100 and steps of servopack are 100um -> space scale=1.e4/100=100\
-- time is scaled 1/10, controller time unit is us -> time scale=1.e6/(200x10)=500\
+- model scale is 1/100 and steps of servopack are 100um -> space scale=1.e4/100=100
+- time is scaled 1/10, controller time unit is us -> time scale=1.e6/(200x10)=500
 - maximum time between steps is 65535us
 
 # Processing 

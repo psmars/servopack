@@ -1,5 +1,5 @@
 /*
-	 Copyright 2016-2019 Pierre SMARS (smars@yuntech.edu.tw)
+	 Copyright 2016-2022 Pierre SMARS (smars@yuntech.edu.tw)
 	 This program is free software: you can redistribute it and/or modify
 	 it under the terms of the GNU General Public License as published by
 	 the Free Software Foundation, either version 2 of the License, or
@@ -17,7 +17,7 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
-#include <math.h>
+#include <cmath>
 #include <limits.h>
 
 #include "SimpleOpt.h"
@@ -184,7 +184,7 @@ int main (int argc, char**argv)
 	unsigned int dt = 1;
 	double scale = 1.;
 	unsigned int tmax=255;
-	bool start = false;
+	bool started = false;
 	double v_max = -1.e30;
 	double v_min = 1.e30;
 	std::string filename("noname");
@@ -268,7 +268,7 @@ int main (int argc, char**argv)
 				in >> v;
 				if (v>v_max) v_max=v;
 				if (v<v_min) v_min=v;
-				vs = int(v*scale+0.5);
+				vs = round(v*scale);
 				a[ne] = vs;
 				if (in)
 					ne++;
@@ -294,7 +294,7 @@ int main (int argc, char**argv)
 				}
 				short sx =0;
 				short sy =0;
-				if (!start)
+				if (!started)
 					n_pulses0++;
 				if ((vx != vx0)||(vy != vy0))
 				{
@@ -308,12 +308,9 @@ int main (int argc, char**argv)
 						sy = vy-vy0;
 						vy0 = vy;
 					}
-					if ((!start)&&((sx!=0)||(sy!=0)))
-					{
-						start=true;
-						t=0;
-					}
-					if (start)
+					if ((!started)&&((sx!=0)||(sy!=0)))
+						started=true;
+					if (started)
 					{
 						int s_max=max(fabs(sx),fabs(sy));
 						if ((s_max>1)&&(t>dt))
@@ -323,7 +320,7 @@ int main (int argc, char**argv)
 						}
 						if (s_max>1)
 						{
-							t = int(t/(s_max*1.)+.5);
+							t = round(t/(s_max*1.));
 							if (t==0)
 							{
 								std::cerr << "Warning! Micropulse smaller than 1. Consider increasing dt or decreasing s." << std::endl;
@@ -363,9 +360,9 @@ int main (int argc, char**argv)
 	std::cerr << " cut_tail: " << t << std::endl;
 	std::cerr << "shortest quiet interval: " << shortest_pulse << std::endl;
 	std::cerr << "longest quiet interval: " << longest_pulse << std::endl;
-	std::cerr << "minimum_x-y_travel: " << int(v_min*scale+0.5) << std::endl;
+	std::cerr << "minimum_x-y_travel: " << round(v_min*scale) << std::endl;
 	std::cerr << " unscaled_original: " << v_min << std::endl;
-	std::cerr << "maximum_x-y_travel: " << int(v_max*scale+0.5) << std::endl;
+	std::cerr << "maximum_x-y_travel: " << round(v_max*scale) << std::endl;
 	std::cerr << " unscaled original: " << v_max << std::endl;
 	std::cerr << "total_time: " << t_tot << std::endl;
 	std::cerr << " scaled_original: " << (n_samples-1)*dt << std::endl;
