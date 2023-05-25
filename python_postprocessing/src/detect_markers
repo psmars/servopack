@@ -16,23 +16,27 @@ import numpy as np
 import cv2
 import cv2.aruco as aruco
 import matplotlib.pyplot as plt
-import sys
-if (len(sys.argv)>2):
-    exit()
-filename = "markers.csv"
-if (len(sys.argv)==1):
+import argparse
+parser = argparse.ArgumentParser(
+   prog = 'detect_markers',
+   description='detect aruco 4x4_50 markers in footage (webcam or file)',
+   epilog='Pierre Smars, 2023')
+parser.add_argument('-i', '--input', metavar='filename', help='footage file (default: webcam)', default='webcam')
+parser.add_argument('-o', '--output', metavar='coordinates', help='file of markers coordinates (default: markers.csv)', default='markers.csv')
+args = parser.parse_args()
+filename = args.input 
+markersfile = args.output 
+if (filename=='webcam'):
     from frame import *
-else:
-    filename = sys.argv[1]
 from pathlib import Path
 
-markers_filename = Path(filename).stem + ".csv"
+markers_filename = Path(markersfile).stem + ".csv"
 
 dictionary = aruco.getPredefinedDictionary(aruco.DICT_4X4_50)
 parameters = aruco.DetectorParameters()
 detector = aruco.ArucoDetector(dictionary, parameters)
-
-if (len(sys.argv)==1):
+print(filename)
+if (filename=='webcam'):
     cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH,max_width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT,max_height)
