@@ -20,6 +20,7 @@ from os import path
 from math import sqrt, cos, sin, atan2
 from pandas import read_csv
 from random import random
+from time import time
 import sys
 if (len(sys.argv)>3):
     exit()
@@ -31,11 +32,11 @@ if (len(sys.argv)==1):
     print("")
     print("Calculating frame rate...")
     frame_count=0
-    start=time.time()
+    start=time()
     for i in range(0,120):
         ret, frame = cap.read()
         frame_count+=1
-    end=time.time()
+    end=time()
     seconds=end-start
     fps=round(frame_count/seconds)
 else:
