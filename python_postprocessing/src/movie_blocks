@@ -21,10 +21,20 @@ from math import sqrt, cos, sin, atan2
 from pandas import read_csv
 from random import random
 from time import time
-import sys
-if (len(sys.argv)>3):
-    exit()
-if (len(sys.argv)==1):
+import argparse
+parser = argparse.ArgumentParser(
+   prog = 'movie_blocks',
+   description='produce a clean footage from a raw footage of aruco marked blocks',
+   epilog='Pierre Smars, 2023')
+parser.add_argument('-i', '--input', metavar='inputfile', help='footage file (default: webcam)', default='webcam')
+parser.add_argument('-o', '--output', metavar='outputfile', help='output footage (default: output.avi)', default='output.avi')
+parser.add_argument('-r', '--rotation', metavar='angle', help='rotation angle (default: 0)', default=0)
+args = parser.parse_args()
+filename = args.input
+output_file = args.output
+angle=float(args.rotation)
+from pathlib import Path
+if (filename=='webcam'):
     from frame import *
     cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH,max_width)
@@ -40,7 +50,6 @@ if (len(sys.argv)==1):
     seconds=end-start
     fps=round(frame_count/seconds)
 else:
-    filename = sys.argv[1]
     if not path.exists(filename):
         print("Video file does not exist")
         exit()
@@ -48,9 +57,6 @@ else:
     ret, frame = cap.read()
     fps=cap.get(cv2.CAP_PROP_FPS)
 h,w = frame.shape[:2]
-angle=0
-if (len(sys.argv)==3):
-    angle=float(sys.argv[2])
 colors=[]
 block0=[]
 centre0=[]
@@ -117,7 +123,7 @@ def block_draw(b,block0,centre0,color,is_first):
 #*****************************
 framesize=(w,h)
 fourcc = cv2.VideoWriter_fourcc(*'MP42')
-out = cv2.VideoWriter('output.avi',fourcc,fps,framesize)
+out = cv2.VideoWriter(output_file,fourcc,fps,framesize)
 for b in blocks:
     name = 'b'+str(b[0])+'_'+str(b[1])
     block0.append(block_definition(name))
@@ -186,4 +192,4 @@ cap.release()
 out.release()
 cv2.destroyAllWindows()
 ff.close()
-print("output.avi: %d frames at %dx%d %d fps\n" % (frame_count,w,h,fps))
+print("%s: %d frames at %dx%d %d fps\n" % (output_file,frame_count,w,h,fps))
