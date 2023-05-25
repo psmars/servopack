@@ -1,7 +1,14 @@
 #!/bin/env python3
-
 import telnetlib
-host = "servo"
+import argparse
+parser = argparse.ArgumentParser(
+   prog = 'run',
+   description='launch the shaking table with the data already uploaded',
+   epilog='Pierre Smars, 2023')
+parser.add_argument('-H', '--host', default='servo', metavar='hostname', help='default: servo')
+args = parser.parse_args()
+
+host = args.host
 tn = telnetlib.Telnet(host)
 tn.read_until(b"> ",timeout=2)
 

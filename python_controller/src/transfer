@@ -1,15 +1,19 @@
 #!/bin/env python3
-import sys
-if (len(sys.argv)!=2):
-    exit()
-
+import argparse
+parser = argparse.ArgumentParser(
+   prog = 'transfer',
+   description='transfer displacement data to the shaking table microcontroller',
+   epilog='Pierre Smars, 2023')
+parser.add_argument('filename', help='file containing the pulses')
+parser.add_argument('-H', '--host', default='servo', metavar='hostname', help='default: servo')
+args = parser.parse_args()
 import telnetlib
-host = "servo"
+host = args.host
 tn = telnetlib.Telnet(host)
 tn.read_until(b"> ",timeout=2)
 tn.write(b"enable x\n")
 msg=tn.read_until(b"> ",timeout=1)
-f = open(sys.argv[1],"r")
+f = open(args.filename,"r")
 i = 0
 for x in f:
     if (x[0] != "#"):
