@@ -5,7 +5,8 @@
 //***************************************
 struct wave
 {
-	uint16_t wait;
+	uint8_t waitH;
+	uint8_t waitL;
 	char code;
 };
 //***************************************
@@ -18,18 +19,24 @@ int main(int argc, char** argv)
 	FILE *in;
 	char buffer[255];
 	in=fopen("pulses.bin","w");
+	fputc('c',in);
 	while (!feof(stdin))
 	{
 		if (fscanf(stdin,"%s %c", buffer,&code)==2)
 		{
-			char code2;
-			code2 = ((code<<1)&0x40)|((code<<2)&0x7c);
-	    awave.wait = atoi(buffer);
-	    awave.code = code2;
-	    printf("wait:%u code:%c\n",atoi(buffer),code);
-	    fwrite(&awave,sizeof(awave)-1,1,in);
+			wait = atoi(buffer);
+			//	    awave.waitH = (wait>>8);
+			//	    awave.waitL = wait;
+			//	    awave.code = code;
+			printf("wait:%u code:%c\n",wait,code);
+			fputc('p',in);
+			fputc((uint8_t)(wait>>8),in);
+			fputc((uint8_t)(wait),in);
+			fputc(code,in);
+			//	    fwrite(&awave,sizeof(awave)-1,1,in);
 		}
 	}
+	fputc('r',in);
 	fclose(in);
 	return 0;
 }
