@@ -38,7 +38,8 @@ Use one the utility:
 - detect_markers (detect and record position of markers in footage)
 - homography_ref (prepare data to straighten up the footage)
 - homography (straighten up the footage)
-- movie_blocks (produce clean footage of the blocks without custom percentage of the original footage visible)
+- movie_blocks (produce clean footage of the blocks without custom percentage of the original footage visible,
+see the code for details about file requirements)
 
 To desactivate the environment
 

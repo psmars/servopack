@@ -75,8 +75,16 @@ try:
     print("block to identify:")
     print(blocks)
 except:
-    print("a file 'blocks' should be present")
-    print("each line should list the block reference points. Ex: '4 5' or '6 6'")
+    print("A file 'blocks' should be present")
+    print("Each line of the file should list the block reference points. Ex: '4 5' or '6 6'")
+    print("Attention: no extra (empty) line")
+    print("For each block, there should be also two extra files:")
+    print("one to define its shape and one to specify its centre of gravity")
+    print("Ex: b4_5 and b4_5.g (see example_data directory)")
+    print("Points coordinates are defined in a system of coordinates")
+    print("where the first marker (ex: 4) has (0,0) as coordinates")
+    print("and the second marker (ex: 5) has (1,0) as coordinates")
+    print("For small blocks with just one marker, the system of coordinates is the one of the marker")
     exit()
 #*****************************
 def block_definition(file_name):
