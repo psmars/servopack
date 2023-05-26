@@ -20,48 +20,45 @@ parameters = aruco.DetectorParameters()
 detector = aruco.ArucoDetector(dictionary, parameters)
 import pickle as pk
 from os import path
-import sys
-verbose=False
-calibration=False
-#*****************************
-def manual(txt):
-    print("%s: %s (calibration_file) video_file (markers)" % (txt,sys.argv[0]))
-    exit()
-#*****************************
+import argparse
+parser = argparse.ArgumentParser(
+   prog = 'homography',
+   description='straighten up a video footage',
+   epilog='Pierre Smars, 2023')
+parser.add_argument('videofile', help='input video footage')
+parser.add_argument('-o', '--output', metavar='new', default='output.avi', help='output video file, default: output.avi')
+parser.add_argument('-b', '--roi', metavar='roi', default='homography_ref.pckl', help='default: homography_ref.pckl')
+parser.add_argument('-c', '--calibration', default='no', metavar='calib', help='calibration file. default: no')
+parser.add_argument('-v', '--verbose', action='store_true')
+args = parser.parse_args()
+filename = args.videofile
+videonew = args.output
+roi = args.roi
+verbose=args.verbose
+calibration= args.calibration
 #arguments
-if (len(sys.argv)>4):
-    manual("Too many arguments")
-if (len(sys.argv)<2):
-    manual("Missing arguments")
-filename = sys.argv[1]
-if (len(sys.argv)==4):
+if (verbose):
     print("Drawing markers")
-    verbose=True
-if ((len(sys.argv)==3)or(verbose)):
-    if (sys.argv[2]=="markers"):
-        print("No calibration file?")
-        verbose=True
-    else:
-        if not path.exists(filename):
-            manual("Calibration file does not exist")
-        try:
-            f = open(filename,'rb')
-            (cam_mat, dist, _, _) = pk.load(f)
-            f.close()
-        except:
-            manual("Bad calibration file")
-        if cam_mat is None or dist is None:
-            manual("Bad calibration file")
-        calibration=True
-        filename = sys.argv[2]
-else:
-    if (filename=="h"):
-        manual("usage")
+if (calibration=='no'):
     print("No calibration file?")
+else:
+    if not path.exists(calibration):
+        print("Calibration file does not exist")
+        exit()
+    try:
+        f = open(filename,'rb')
+        (cam_mat, dist, _, _) = pk.load(f)
+        f.close()
+    except:
+        print("Bad calibration file")
+        if cam_mat is None or dist is None:
+            print("Bad calibration file")
+            exit()
 if not path.exists(filename):
-    manual("Video file does not exist")
+    print("Video file does not exist")
+    exit()
 try:
-    f = open('homography_ref.pckl','rb')
+    f = open(roi,'rb')
     (wl,hl,ml,mr,mb,mt) = pk.load(f)
     f.close()
 except:
@@ -71,6 +68,7 @@ except:
     mr=100
     mb=440
     mt=60
+    print("Cannot open region of interest file, using defaults")
 #*****************************
 # webcam settings
 cap=cv2.VideoCapture(filename)
@@ -99,7 +97,7 @@ w2=ml+mr+wl
 h2=mt+mb+hl
 framesize=(w2,h2)
 fourcc = cv2.VideoWriter_fourcc(*'MP42')
-out = cv2.VideoWriter('output.avi',fourcc,fps,framesize)
+out = cv2.VideoWriter(videonew,fourcc,fps,framesize)
 #*****************************
 #homography moving average
 nframes=10
@@ -112,7 +110,7 @@ def moving_average(Mm):
             Mt += M
             nm +=1
     return Mt/nm
-if calibration:
+if calibration!='no':
     n_cam_mat,roi = cv2.getOptimalNewCameraMatrix(cam_mat, dist, (w,h), 1, (w,h))
     x, y, w, h = roi
 #*****************************
@@ -120,7 +118,7 @@ while (cap.isOpened()):
     ret, frame = cap.read()
     if ret:
         frame_count_tot+=1
-        if calibration:
+        if calibration!='no':
             frame = cv2.undistort(frame,cam_mat, dist,None, n_cam_mat)
             frame = frame[y:y+h, x:x+w]
         (corners, ids, rejected) = detector.detectMarkers(frame)
