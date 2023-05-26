@@ -29,10 +29,14 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-i', '--input', metavar='inputfile', help='footage file (default: webcam)', default='webcam')
 parser.add_argument('-o', '--output', metavar='outputfile', help='output footage (default: output.avi)', default='output.avi')
 parser.add_argument('-r', '--rotation', metavar='angle', help='rotation angle (default: 0)', default=0)
+parser.add_argument('-b', '--background', metavar='val', help='background visibility: 0-1 (default: 0)', default=0)
 args = parser.parse_args()
 filename = args.input
 output_file = args.output
 angle=float(args.rotation)
+tb=float(args.background)
+tb=max(min(tb,1),0)
+tc=1.-tb
 from pathlib import Path
 if (filename=='webcam'):
     from frame import *
@@ -44,7 +48,7 @@ if (filename=='webcam'):
     frame_count=0
     start=time()
     for i in range(0,120):
-        ret, frame = cap.read()
+        ret, bg = cap.read()
         frame_count+=1
     end=time()
     seconds=end-start
@@ -54,9 +58,9 @@ else:
         print("Video file does not exist")
         exit()
     cap = cv2.VideoCapture(filename)
-    ret, frame = cap.read()
+    ret, bg = cap.read()
     fps=cap.get(cv2.CAP_PROP_FPS)
-h,w = frame.shape[:2]
+h,w = bg.shape[:2]
 colors=[]
 block0=[]
 centre0=[]
@@ -110,16 +114,20 @@ def block_draw(b,block0,centre0,color,is_first):
     c+=t
     print("%f %f %f %f" % (c[0,0],c[0,1],a,d),file=ff)
     c=c.astype(int)
-    cv2.line(frame,(int(cx1),int(cy1)),(int(cx2),int(cy2)),(0,0,255),2)
+    cv2.line(clean,(int(cx1),int(cy1)),(int(cx2),int(cy2)),(0,0,255),2)
     if (is_first):
-        cv2.fillPoly(frame,[b],(220,220,220))
-        cv2.polylines(frame,[b],True,(100,100,100),2)
+        cv2.fillPoly(clean,[b],(220,220,220))
+        cv2.polylines(clean,[b],True,(100,100,100),2)
     else:
-        cv2.fillPoly(frame,[b],color)
-        cv2.polylines(frame,[b],True,(0,0,0),4)
-        cv2.circle(frame,(int(cx1),int(cy1)),4,(0,150,0),-1)
-        cv2.circle(frame,(int(cx2),int(cy2)),4,(0,150,0),-1)
-        cv2.circle(frame,(c[0,0],c[0,1]),8,(0,0,255),-1)
+        cv2.fillPoly(clean,[b],color)
+        cv2.polylines(clean,[b],True,(0,0,0),4)
+        cv2.polylines(bg,[b],True,(0,0,0),4)
+        cv2.circle(clean,(int(cx1),int(cy1)),4,(0,150,0),-1)
+        cv2.circle(clean,(int(cx2),int(cy2)),4,(0,150,0),-1)
+        cv2.circle(clean,(c[0,0],c[0,1]),8,(0,0,255),-1)
+        cv2.circle(bg,(int(cx1),int(cy1)),4,(0,150,0),-1)
+        cv2.circle(bg,(int(cx2),int(cy2)),4,(0,150,0),-1)
+        cv2.circle(bg,(c[0,0],c[0,1]),8,(0,0,255),-1)
 #*****************************
 framesize=(w,h)
 fourcc = cv2.VideoWriter_fourcc(*'MP42')
@@ -140,20 +148,21 @@ ff = open("centroid","w")
 
 frame_count=0
 while (cap.isOpened()):
-    ret, frame = cap.read()
+    ret, bg = cap.read()
     if ret==True:
         frame_count+=1
         try:
-            (corners, ids, rejected) = detector.detectMarkers(frame)
+            (corners, ids, rejected) = detector.detectMarkers(bg)
         except:
             corners=[]
             print("no corner!")
         if len(corners)>0:
             ids = ids.flatten()
             if (first):
-                frame=np.ones((frame.shape[0], frame.shape[1], 3), dtype=np.uint8)*255
+                clean=np.ones((bg.shape[0], bg.shape[1], 3), dtype=np.uint8)*255
+#                xx=1
             else:
-                frame=background.copy();
+                clean=background.copy();
             for (m_corner, m_id) in zip(corners, ids):
                 corners = m_corner.reshape((4, 2))
                 (tl, tr, br, bl) = corners
@@ -162,9 +171,9 @@ while (cap.isOpened()):
                 dx = (tr[0]+br[0])/2
                 dy = (tr[1]+br[1])/2
                 if (first):
-                    cv2.circle(frame,(int(cx),int(cy)),4,(0,0,0),-1)
+                    cv2.circle(clean,(int(cx),int(cy)),4,(0,0,0),-1)
                 else:
-                    cv2.circle(frame,(int(cx),int(cy)),4,(0,150,0),-1)
+                    cv2.circle(clean,(int(cx),int(cy)),4,(0,150,0),-1)
                 ref[m_id]=(cx,cy,dx,dy)
             ite=0
             for b in blocks:
@@ -173,12 +182,14 @@ while (cap.isOpened()):
                     block_draw(b,block0[ite],centre0[ite],colors[ite],first)
                 ite += 1
             if (first):
-                background = frame.copy()
+                background = clean.copy()
                 first=False
         try:
-            img = imutils.resize(frame,width=w)
-            #img2 = imutils.rotate(img,0.8) 
-            img2 = cv2.warpAffine(img,M,(w,h),borderValue=(255,255,255)) 
+            mix = cv2.addWeighted(clean,tc,bg,tb,0)
+            img = imutils.resize(mix,width=w)
+            #img2 = imutils.rotate(img,0.8)
+            img2 = cv2.warpAffine(img,M,(w,h),borderValue=(255,255,255))
+            #img2 = cv2.warpAffine(img,M,(1920,1080),borderValue=(255,255,255),flags=cv2.INTER_CUBIC)
             cv2.imshow("Frame",img2)
             out.write(img2)
         except:
