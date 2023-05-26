@@ -30,6 +30,7 @@ Go to the directory with the data:
 
 Use one the utility:
 
+- make_marker (create markers)
 - detect_markers (detect and record position of markers in footage)
 - homography_ref (prepare data to straighten up the footage)
 - homography (straighten up the footage)
