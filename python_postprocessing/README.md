@@ -21,17 +21,19 @@ Install the utilities:
 # For use
 
 Activate the environment if it is not yet done.
+
+- source venv/bin/activate
+
 Go to the directory with the data:
 
 - cd /where/is/the/data
 
 Use one the utility:
 
-- detect_markers
-- movie_blocks
-- movie_blocks_bg
-- homography_ref
-- homography
+- detect_markers (detect and record position of markers in footage)
+- homography_ref (prepare data to straighten up the footage)
+- homography (straighten up the footage)
+- movie_blocks (produce clean footage of the blocks without custom percentage of the original footage visible)
 
 To desactivate the environment
 
