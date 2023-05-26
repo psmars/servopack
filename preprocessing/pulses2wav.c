@@ -1,5 +1,5 @@
 /*
-	 Copyright 2019 Pierre SMARS (smars@yuntech.edu.tw)
+	 Copyright 2019-23 Pierre SMARS (smars@yuntech.edu.tw)
 	 This program is free software: you can redistribute it and/or modify
 	 it under the terms of the GNU General Public License as published by
 	 the Free Software Foundation, either version 2 of the License, or
@@ -19,8 +19,8 @@
 
 int main()
 {
-	int x,y;
-	unsigned int t;
+	int16_t x,y;
+	uint32_t t;
 	uint16_t wait;
 	char code;
 	while (!feof(stdin))    
@@ -32,22 +32,20 @@ int main()
 		short p2 = (code2>>1)&0x1;
 		short d1 = (code2>>2)&0x1;
 		short p1 = (code2>>3)&0x1;
-		t += wait;
-		if (d1==1)
-			x -= p1;
-		else
-			x += p1;
-		if (d2==1)
-			y -= p2;
-		else
-			y += p2;
-		printf("%u %d %d\n",t,x,y);
-		/*
-		for (int i=0; i<wait/10; i++)
+		for (int i=0; i<10; i++)
 		{
+			if (d1==1)
+				x -= p1;
+			else
+				x += p1;
+			if (d2==1)
+				y -= p2;
+			else
+				y += p2;
+			printf("%u %d %d\n",t,x,y);
+			t += wait/10;
 			printf("%u %d %d\n",t,x,y);
 		}
-		*/
 	}
 	return 0;
 }
