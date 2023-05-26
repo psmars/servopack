@@ -14,6 +14,10 @@ Activate the environment:
 
 - source venv/bin/activate
 
+Copy the example configuration file for a webcam (even if not needed) and modify it to fit yours
+
+- cp example_data/frame.py.example frame.py
+
 Install the utilities:
 
 - pip install -e .
