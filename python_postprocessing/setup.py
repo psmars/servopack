@@ -5,7 +5,7 @@ from glob import glob
 setup(
         name="postprocessing",
         version="0.2",
-        description = "shaking table film processing",
+        description = "film processing",
         long_description="opencv scripts to process footages of the shaking table experiments",
         author = "Pierre SMARS",
         author_email="smars@yuntech.edu.tw",
