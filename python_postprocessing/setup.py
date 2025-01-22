@@ -11,7 +11,7 @@ setup(
         author_email="smars@yuntech.edu.tw",
         url = "https://github.com/psmars/servopack",
         platforms=["any"],
-        scripts=['frame.py']+(list(filter(lambda x: os.path.isfile(x), os.listdir("src")))),
+        scripts=['frame.py']+(list(filter(lambda x: os.path.isfile(x), ["src/" + x for x in os.listdir("src")]))),
         install_requires=["matplotlib==3.10.0","opencv-python==4.11.0.86","imutils==0.5.4","pandas==2.2.2"],
         license = "GPLv2",
         )
