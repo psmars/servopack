@@ -8,25 +8,25 @@ date: \today
 
 Create a virtual environment:
 
-- python -m venv venv
+- python -m venv postprocessing
 
 Activate the environment:
 
-- source venv/bin/activate
+- source postprocessing/bin/activate
 
-Copy the example configuration file for a webcam (even if not needed) and modify it to fit yours
-
-- cp example_data/frame.py.example frame.py
-
-Install the utilities:
+Install the needed modules and scripts:
 
 - pip install -e .
+
+Edit the configuration file for a webcam (even if not needed) and modify it to fit yours
+
+- vi bin/frame.py
 
 # For use
 
 Activate the environment if it is not yet done.
 
-- source venv/bin/activate
+- source postprocessing/bin/activate
 
 Go to the directory with the data:
 
