@@ -1,6 +1,6 @@
 """Package configuration."""
 from setuptools import find_packages, setup
-from glob import glob
+import os
 
 setup(
         name="postprocessing",
@@ -11,7 +11,7 @@ setup(
         author_email="smars@yuntech.edu.tw",
         url = "https://github.com/psmars/servopack",
         platforms=["any"],
-        scripts=['frame.py']+glob("src/*"),
-        install_requires=["matplotlib==3.7.1","opencv-python==4.7.0.72","imutils==0.5.4","pandas==2.0.1"],
+        scripts=['frame.py']+(list(filter(lambda x: os.path.isfile(x), os.listdir("src")))),
+        install_requires=["matplotlib==3.10.0","opencv-python==4.11.0.86","imutils==0.5.4","pandas==2.2.2"],
         license = "GPLv2",
         )
