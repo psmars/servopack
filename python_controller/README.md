@@ -8,21 +8,22 @@ date: \today
 
 Create a virtual environment:
 
-- python -m venv venv
+- python -m venv servo
 
 Activate the environment:
 
-- source venv/bin/activate
+- source servo/bin/activate
 
 Install the utilities:
 
+- cd servo
 - pip install -e .
 
 # For use
 
 If not yet done, activate the environment.
 
-- source venv/bin/activate
+- source servo/bin/activate
 
 Go to the directory with the data:
 
@@ -30,9 +31,11 @@ Go to the directory with the data:
 
 Use one the utility:
 
-- transfer filename
-- run
+- transfer.py filename
+- run.py
 - python
+	- import sys
+	- sys.path.append('/where/is/servo')
 	- from servo import *
 	- help()
 
