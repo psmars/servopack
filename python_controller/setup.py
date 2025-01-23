@@ -11,8 +11,7 @@ setup(
         url="https://github.com/psmars/servopack",
         license="GPLv2",
         platforms=["any"],
-        packages=find_packages(where="."),
-        package_dir={"": "src"},
+        packages=["."],
         scripts=['src/run','src/transfer'],
         install_requires=["matplotlib==3.10.0"],
         )

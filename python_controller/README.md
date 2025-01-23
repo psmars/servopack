@@ -34,9 +34,7 @@ Use one the utility:
 - transfer.py filename
 - run.py
 - python
-	- import sys
-	- sys.path.append('/where/is/servo')
-	- from servo import *
+	- from servo import * 
 	- help()
 
 To deactivate the environment
