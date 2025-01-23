@@ -16,7 +16,6 @@ Activate the environment:
 
 Install the utilities:
 
-- cd servo
 - pip install -e .
 
 # For use
@@ -31,8 +30,8 @@ Go to the directory with the data:
 
 Use one the utility:
 
-- transfer.py filename
-- run.py
+- transfer filename
+- run
 - python
 	- from servo import * 
 	- help()
